@@ -1,5 +1,7 @@
 import React from 'react';
 import { formatRelative } from 'date-fns';
+import {fr} from 'date-fns/esm/locale';
+import {createdAtLocale} from '../services';
 
 const Message = ({
     createdAt = null,
@@ -8,15 +10,14 @@ const Message = ({
     photoURL = '',
 }) => {
     return (
-        <div>
+        <div >
             {photoURL ? (
-                <img src={photoURL} alt="avatar" width={45} height={45} />
-                ) : null}
+                <img  className="rounded-full" src={photoURL} alt="avatar" width={45} height={45} />) : null}
             {displayName ? <p>{displayName}</p> : null}
-            {createdAt?.secondes ? (
+            {createdAt.seconds ? (
+                
                 <span>
-                    {formatRelative(new Date(createdAt.seconds * 1000), new Date()
-                    )}
+                    {formatRelative(new Date(createdAt.seconds * 1000), new Date(), {createdAtLocale} )} 
                 </span>
             ) : null}
             <p>{text}</p>   

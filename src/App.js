@@ -25,64 +25,66 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 
 function App() {
-  // if user has already connected
-const [user,  setUser] = useState(() => auth.currentUser); 
-const [initializing, setInitializing] = useState(true);  
+    // if user has already connected
+  const [user,  setUser] = useState(() => auth.currentUser); 
+  const [initializing, setInitializing] = useState(true);  
 
-  // check user current state of authentication and receive an event when that state changed
-useEffect(()=> {
-    const unsubscribe = auth.onAuthStateChanged( user => {
-    if (user) {
-        setUser(user);
-    } else {
-      setUser(null);
+    // check user current state of authentication and receive an event when that state changed
+  useEffect(()=> {
+      const unsubscribe = auth.onAuthStateChanged( user => {
+        if (user) {
+            setUser(user);
+        } else {
+          setUser(null);
+        }
+
+        if (initializing) {
+          setInitializing(false);
+        }
+    // clear subscription 
+    return unsubscribe;  
+    })
+  }, [])
+
+    // signin using google account
+  const signInWithGoogle = async () => {
+    // Fetch google auth provider
+    const provider = new firebase.auth.GoogleAuthProvider();
+    // Start sign-in
+    try {
+      await auth.signInWithPopup(provider);
+    }catch(error){
+      console.log(error.message);
     }
-    if (initializing) {
-      setInitializing(false);
+  };
+
+  //sign out method
+  const signOut = async () => {
+    try {
+      await firebase.auth().signOut();
+    } catch (error) {
+      console.log(error.message);
     }
-  // clear subscription 
-  return unsubscribe  
-  })
-}, [])
-  // onClick event handler
-const signInWithGoogle = async () => {
-  // Fetch google auth provider
-  const provider = new firebase.auth.GoogleAuthProvider();
-  // Start sign-in
-  try {
-    await auth.signInWithPopup(provider);
-  }catch(error){
+  };
 
-  }
-};
+  if (initializing) return "Loading ...";
 
- //sign out method
-const signOut = async () => {
-   try {
-     await firebase.auth().signOut();
-   } catch (error) {
-    console.log(error.message);
-   }
-};
+  return (
+      <div>
+        {user ? (
+          <>
+            <Button onClick={signOut}> Déconnexion </Button>
+            <p>Bienvenue au chat</p>
+            <Channel user={user}/>
+              
+          </>
+        ) : (
+          <Button onClick={signInWithGoogle}> S'identifier avec Google
+        </Button>
+        )}
 
-if (initializing) return "Loading ...";
-
-return (
-    <div>
-      {user ? (
-        <>
-          <Button onClick={signOut}> Déconnexion </Button>
-          <p>Bienvenue au chat</p>
-          <Channel user={user}/>
-            
-        </>
-      ) : (
-        <Button onClick={signInWithGoogle}> S'identifier avec Google
-      </Button>
-      )}
-
-      
-    </div>
+        
+      </div>
   );
 }
 

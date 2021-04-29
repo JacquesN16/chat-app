@@ -43,7 +43,9 @@ const handleOnSubmit = e => {
         <>
         <ul>
             {messages.map(message => (
-                <li key={messages.id}> {message.text} </li>
+                <li key={messages.id}> 
+                    <Message { ... message}/> 
+                </li>
             ))}
         </ul>
         <form onSubmit={handleOnSubmit}>
