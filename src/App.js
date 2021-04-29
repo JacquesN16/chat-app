@@ -63,20 +63,17 @@ const signOut = async () => {
    } catch (error) {
     console.log(error.message);
    }
-}
+};
 
-if(initializing) return "Loading ...";
+if (initializing) return "Loading ...";
 
-
-if (user) return <Channel user={user}/>;
-  
-
-  return (
+return (
     <div>
       {user ? (
         <>
-          <Button onClick={signOut}>Déconnexion</Button>
+          <Button onClick={signOut}> Déconnexion </Button>
           <p>Bienvenue au chat</p>
+          <Channel user={user}/>
             
         </>
       ) : (
